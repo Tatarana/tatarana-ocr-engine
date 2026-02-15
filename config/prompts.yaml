@@ -1,0 +1,64 @@
+# LLM Prompts for OCR Processing
+
+identify_file: |
+  Analyze this financial document and identify:
+  1. The bank or financial institution (PicPay, Itaú, XP, or other)
+  2. The document type (bank_statement or credit_card)
+  3. Any other relevant metadata
+  
+  Respond in JSON format:
+  {
+    "bank": "bank_name",
+    "document_type": "bank_statement|credit_card",
+    "confidence": 0.95
+  }
+
+picpay_bank_statement: |
+  Extract all transactions from this PicPay bank statement. For each transaction, provide:
+  - Date (YYYY-MM-DD format)
+  - Description/Transaction details
+  - Amount (positive for credits, negative for debits)
+  - Balance (if available)
+  - Category (if identifiable)
+  
+  Return as CSV with headers: date,description,amount,balance,category
+
+itau_bank_statement: |
+  Extract all transactions from this Itaú bank statement. For each transaction, provide:
+  - Date (YYYY-MM-DD format)
+  - Description/Transaction details
+  - Amount (positive for credits, negative for debits)
+  - Balance (if available)
+  - Category (if identifiable)
+  
+  Return as CSV with headers: date,description,amount,balance,category
+
+picpay_credit_card: |
+  Extract all transactions from this PicPay credit card statement. For each transaction, provide:
+  - Date (YYYY-MM-DD format)
+  - Description/Merchant name
+  - Amount (positive value)
+  - Installments (if applicable)
+  - Category (if identifiable)
+  
+  Return as CSV with headers: date,description,amount,installments,category
+
+itau_credit_card: |
+  Extract all transactions from this Itaú credit card statement. For each transaction, provide:
+  - Date (YYYY-MM-DD format)
+  - Description/Merchant name
+  - Amount (positive value)
+  - Installments (if applicable)
+  - Category (if identifiable)
+  
+  Return as CSV with headers: date,description,amount,installments,category
+
+xp_credit_card: |
+  Extract all transactions from this XP credit card statement. For each transaction, provide:
+  - Date (YYYY-MM-DD format)
+  - Description/Merchant name
+  - Amount (positive value)
+  - Installments (if applicable)
+  - Category (if identifiable)
+  
+  Return as CSV with headers: date,description,amount,installments,category

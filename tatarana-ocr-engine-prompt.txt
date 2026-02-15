@@ -1,0 +1,170 @@
+Create a Python backend microservice called "tatarana-ocr-engine" that processes bank and credit card statements from Google Drive using LLM-based OCR and outputs CSV files back to Google Drive.
+
+## Project Requirements
+
+### Core Functionality
+- Read PDF/image files from Google Drive
+- Use OpenAI API (or configurable LLM) to perform OCR on financial statements
+- Parse extracted data into structured CSV format
+- Write CSV files back to Google Drive
+- Support multiple banks: PicPay, Itaú, and XP
+- Each bank has unique statement formats requiring specific processing logic
+
+### Architecture
+- Python-based REST API microservice
+- Framework: FastAPI (for async support and automatic OpenAPI docs)
+- Containerized with Docker
+- Prompts stored in external configuration files (JSON or YAML), not hardcoded
+
+### Endpoints Structure
+
+1. **POST /ocr-file** - Main orchestration endpoint
+   - Accepts: Google Drive file ID or path
+   - Orchestrates: calls /identify-file, then routes to appropriate bank-specific endpoint
+   - Returns: CSV file details and Google Drive link
+
+2. **POST /identify-file** - File identification endpoint
+   - Accepts: Google Drive file ID
+   - Uses LLM to identify bank and statement type
+   - Returns: bank name and statement type (bank_statement or credit_card)
+
+3. **POST /ocr-bank-statement-picpay** - PicPay bank statement processor
+4. **POST /ocr-bank-statement-itau** - Itaú bank statement processor
+5. **POST /ocr-cc-statement-picpay** - PicPay credit card processor
+6. **POST /ocr-cc-statement-itau** - Itaú credit card processor
+7. **POST /ocr-cc-statement-xp** - XP credit card processor
+
+8. **GET /health** - Health check endpoint
+9. **GET /show-config** - Display current configuration (excluding secrets)
+
+### Technical Specifications
+
+**Dependencies:**
+- fastapi
+- uvicorn
+- google-auth / google-api-python-client (Google Drive API)
+- openai (or litellm for multi-LLM support)
+- python-dotenv
+- pydantic (for data validation)
+- pyyaml (for YAML configuration)
+- pandas (for CSV generation)
+- PyPDF2 or pdf2image (for PDF handling)
+- Pillow (for image processing)
+
+**Environment Variables (Keys Only):**
+- GOOGLE_DRIVE_CREDENTIALS_PATH (path to service account JSON file)
+- OPENAI_API_KEY (or LLM_API_KEY)
+- LLM_BASE_URL (optional, for alternative LLM providers)
+
+**Configuration Files:**
+- `config.yaml` or `config.json` - Application configuration:
+  - GOOGLE_DRIVE_FOLDER_ID (for output files)
+  - LLM_MODEL (default: gpt-4o)
+  - LOG_LEVEL (default: INFO)
+  - API settings (timeouts, retries, etc.)
+  - File processing settings
+- `prompts.yaml` or `prompts.json` - All LLM prompts for each endpoint
+- `.env.example` - Template for API keys and credentials only
+- `docker-compose.yml` - Local development setup
+- `Dockerfile` - Multi-stage build for production
+
+### Project Structure
+tatarana-ocr-engine/
+├── app/
+│   ├── init.py
+│   ├── main.py (FastAPI app initialization)
+│   ├── config.py (load config from YAML/JSON and env vars)
+│   ├── routers/
+│   │   ├── init.py
+│   │   ├── orchestrator.py (/ocr-file, /identify-file)
+│   │   ├── bank_statements.py (bank statement endpoints)
+│   │   ├── credit_cards.py (credit card endpoints)
+│   │   └── system.py (/health, /show-config)
+│   ├── services/
+│   │   ├── init.py
+│   │   ├── google_drive.py (Drive API integration)
+│   │   ├── llm_service.py (LLM API calls)
+│   │   ├── ocr_processor.py (OCR orchestration logic)
+│   │   └── csv_generator.py (CSV creation)
+│   ├── models/
+│   │   ├── init.py
+│   │   ├── requests.py (Pydantic request models)
+│   │   └── responses.py (Pydantic response models)
+│   └── utils/
+│       ├── init.py
+│       ├── config_loader.py (load app config from YAML/JSON)
+│       ├── prompt_loader.py (load prompts from config)
+│       └── file_handler.py (PDF/image processing)
+├── config/
+│   ├── config.yaml (application settings)
+│   └── prompts.yaml (prompt templates)
+├── tests/
+│   ├── init.py
+│   ├── test_endpoints.py
+│   └── test_services.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.example (only API keys)
+├── .gitignore
+└── README.md
+
+### Implementation Details
+
+**Google Drive Integration:**
+- Use service account authentication
+- Download files to temporary storage for processing
+- Upload CSV results to specified folder
+- Include error handling for API rate limits
+
+**LLM Processing:**
+- Convert PDFs to images if necessary (some LLMs handle PDFs natively)
+- Use vision-capable models (GPT-4o, Claude 3, etc.)
+- Implement retry logic with exponential backoff
+- Stream responses for large documents
+
+**Prompt Management:**
+- Store prompts in YAML/JSON with structure:
+```yaml
+  identify_file: "Analyze this financial document and identify..."
+  picpay_bank_statement: "Extract transactions from this PicPay bank statement..."
+  itau_bank_statement: "..."
+  picpay_credit_card: "..."
+```
+- Load prompts at startup, allow hot-reload for development
+
+**CSV Output Format:**
+- Standardized columns: date, description, amount, balance, category, etc.
+- Bank-specific additional columns as needed
+- UTF-8 encoding with BOM for Excel compatibility
+
+**Error Handling:**
+- Comprehensive logging
+- Meaningful error messages in API responses
+- Handle: file not found, OCR failures, parsing errors, Drive API errors
+
+**Docker Setup:**
+- Multi-stage Dockerfile for smaller image size
+- docker-compose with environment variable injection
+- Volume mount for local development (hot reload)
+- Health check configuration
+
+### Deliverables
+1. Fully functional microservice with all endpoints
+2. Dockerfile and docker-compose.yml
+3. Complete requirements.txt
+4. .env.example with all required variables
+5. README.md with setup instructions and API documentation
+6. Sample prompts.yaml configuration
+7. Basic test suite
+
+### Additional Considerations
+- Add request validation using Pydantic models
+- Implement proper logging (structured logs)
+- Add CORS configuration if needed for frontend
+- Consider rate limiting for API endpoints
+- Include example requests in README
+- Add OpenAPI documentation via FastAPI automatic generation
+
+Please create this project with clean, production-ready code, following Python best practices (PEP 8, type hints, docstrings).
+

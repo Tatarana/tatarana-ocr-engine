@@ -1,0 +1,36 @@
+# Application Configuration
+app:
+  name: "tatarana-ocr-engine"
+  version: "1.0.0"
+  debug: false
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  timeout: 300
+  max_retries: 3
+  retry_delay: 1
+
+# Google Drive Settings
+google_drive:
+  output_folder_id: ""  # Set this to your Google Drive folder ID
+  temp_download_path: "/tmp/ocr_downloads"
+
+# LLM Settings
+llm:
+  model: "gpt-4o"
+  base_url: ""  # Optional: for alternative LLM providers
+  max_tokens: 4000
+  temperature: 0.1
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# File Processing
+processing:
+  max_file_size_mb: 50
+  supported_formats: ["pdf", "jpg", "jpeg", "png"]
+  pdf_dpi: 300
