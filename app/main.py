@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import DEBUG, LOG_LEVEL
-from app.routers import orchestrator, bank_statements, credit_cards, system
+from app.routers import orchestrator, bank_statements, credit_cards, system, input_folder
 
 # Configure logging
 logging.basicConfig(
@@ -45,6 +45,7 @@ app.include_router(orchestrator.router, prefix="/api/v1", tags=["orchestrator"])
 app.include_router(bank_statements.router, prefix="/api/v1", tags=["bank-statements"])
 app.include_router(credit_cards.router, prefix="/api/v1", tags=["credit-cards"])
 app.include_router(system.router, prefix="/api/v1", tags=["system"])
+app.include_router(input_folder.router, prefix="/api/v1", tags=["input-folder"])
 
 
 @app.get("/")

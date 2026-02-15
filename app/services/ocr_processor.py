@@ -7,6 +7,7 @@ from app.services.google_drive import GoogleDriveService
 from app.services.csv_generator import CSVGenerator
 from app.utils.file_handler import FileHandler
 from app.utils.prompt_loader import PromptLoader
+from app.config import GOOGLE_DRIVE_OUTPUT_FOLDER_ID
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +101,7 @@ class OCRProcessor:
             csv_file_id, csv_file_url = self.drive_service.upload_csv(
                 csv_content, 
                 output_filename,
-                GOOGLE_DRIVE_FOLDER_ID  # This should come from config
+                GOOGLE_DRIVE_OUTPUT_FOLDER_ID  # Use output folder from config
             )
             
             # Count transactions
@@ -151,7 +152,7 @@ class OCRProcessor:
             csv_file_id, csv_file_url = self.drive_service.upload_csv(
                 csv_content, 
                 output_filename,
-                GOOGLE_DRIVE_FOLDER_ID  # This should come from config
+                GOOGLE_DRIVE_OUTPUT_FOLDER_ID  # Use output folder from config
             )
             
             # Count transactions

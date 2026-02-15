@@ -25,7 +25,7 @@ A Python backend microservice that processes bank and credit card statements fro
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Tatarana/tatarana-ocr-engine.git
    cd tatarana-ocr-engine
    ```
 
@@ -113,6 +113,50 @@ Identifies the bank and document type from a file.
 }
 ```
 
+### Input Folder Endpoints
+
+#### `GET /api/v1/list-input-files`
+List all files in the configured input folder.
+
+**Response:**
+```json
+[
+  {
+    "id": "file_id",
+    "name": "statement.pdf",
+    "mimeType": "application/pdf",
+    "size": "1024000",
+    "createdTime": "2023-01-01T12:00:00.000Z"
+  }
+]
+```
+
+#### `POST /api/v1/process-input-folder`
+Process all files in the configured input folder automatically.
+
+**Response:**
+```json
+{
+  "message": "Processed 5 files successfully, 1 files failed",
+  "total_files": 6,
+  "processed_files": [
+    {
+      "file_name": "picpay_statement.pdf",
+      "csv_file_id": "generated_csv_id",
+      "csv_file_url": "https://drive.google.com/file/d/...",
+      "transactions_count": 25,
+      "processing_time": 12.5
+    }
+  ],
+  "failed_files": [
+    {
+      "file_name": "unsupported_file.txt",
+      "error": "Unsupported file format"
+    }
+  ]
+}
+```
+
 ### Bank-Specific Endpoints
 
 #### Bank Statements
@@ -156,6 +200,8 @@ Edit `config/config.yaml` to customize:
 - LLM model and parameters
 - File processing limits
 - Logging configuration
+- **Input folder ID** (optional, for batch processing)
+- **Output folder ID** (required for CSV uploads)
 
 ### Prompt Configuration
 

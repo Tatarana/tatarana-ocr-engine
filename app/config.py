@@ -21,7 +21,8 @@ MAX_RETRIES = config_loader.get('api.max_retries', 3)
 RETRY_DELAY = config_loader.get('api.retry_delay', 1)
 
 # Google Drive settings
-GOOGLE_DRIVE_FOLDER_ID = os.getenv('GOOGLE_DRIVE_FOLDER_ID', '')
+GOOGLE_DRIVE_INPUT_FOLDER_ID = config_loader.get('google_drive.input_folder_id', '')
+GOOGLE_DRIVE_OUTPUT_FOLDER_ID = config_loader.get('google_drive.output_folder_id', '')
 GOOGLE_DRIVE_CREDENTIALS_PATH = os.getenv('GOOGLE_DRIVE_CREDENTIALS_PATH', '')
 TEMP_DOWNLOAD_PATH = config_loader.get('google_drive.temp_download_path', '/tmp/ocr_downloads')
 

@@ -113,6 +113,23 @@ class GoogleDriveService:
             logger.error(f"Error uploading CSV file: {e}")
             raise
     
+    def list_files_in_folder(self, folder_id: str) -> list:
+        """List all files in a specific Google Drive folder."""
+        try:
+            results = self.service.files().list(
+                q=f"'{folder_id}' in parents and trashed=false",
+                fields="files(id, name, mimeType, size, createdTime)",
+                pageSize=1000
+            ).execute()
+            
+            files = results.get('files', [])
+            logger.info(f"Found {len(files)} files in folder")
+            return files
+            
+        except HttpError as e:
+            logger.error(f"Error listing files in folder: {e}")
+            raise
+    
     def get_file_info(self, file_id: str) -> dict:
         """Get file information from Google Drive."""
         try:

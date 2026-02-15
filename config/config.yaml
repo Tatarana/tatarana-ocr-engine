@@ -14,7 +14,8 @@ api:
 
 # Google Drive Settings
 google_drive:
-  output_folder_id: ""  # Set this to your Google Drive folder ID
+  input_folder_id: "1tup5xVy1BMyYKSNJYa-wX1pFumY1WoKE"  # Optional: Set this to monitor specific input folder
+  output_folder_id: "1s4gccRQgPIAka1ySvQ0I8beQb22bxHJX"  # Set this to your Google Drive folder ID
   temp_download_path: "/tmp/ocr_downloads"
 
 # LLM Settings
